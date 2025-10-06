@@ -23,10 +23,19 @@ app.get(
   routeAdapter(makeListLeadsController())
 );
 
+app.get(
+  "/leads",
+  middlewareAdapter(makeAuthenticationMiddleware()),
+  middlewareAdapter(makeAuthorizationMiddleware(["leads:read"])),
+  (req, res) => {
+    res.json({ created: true });
+  }
+);
+
 app.post(
   "/leads",
   middlewareAdapter(makeAuthenticationMiddleware()),
-  middlewareAdapter(makeAuthorizationMiddleware(["ADMIN"])),
+  middlewareAdapter(makeAuthorizationMiddleware(["leads:write"])),
   (req, res) => {
     res.json({ created: true });
   }

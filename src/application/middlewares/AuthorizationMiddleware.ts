@@ -1,8 +1,12 @@
 import { IData, IMiddleware, IResponse } from "../interfaces/IMiddleware";
 import { IRequest } from "../interfaces/IRequest";
+import { GetRolePermissionsUseCase } from "../useCases/GetRolePermissionsUseCase";
 
 export class AuthorizationMiddleware implements IMiddleware {
-  constructor(private readonly allowedRoles: string[]) {}
+  constructor(
+    private readonly requiredPermissions: string[],
+    private readonly getRolePermissionsUseCase: GetRolePermissionsUseCase
+  ) {}
 
   async handle(request: IRequest): Promise<IResponse | IData> {
     if (!request.account) {
@@ -12,7 +16,7 @@ export class AuthorizationMiddleware implements IMiddleware {
       };
     }
 
-    if (!this.allowedRoles.includes(request.account.role)) {
+    if (!this.requiredPermissions.includes(request.account.role)) {
       return {
         statusCode: 403,
         body: { error: "Access denied" },
