@@ -24,6 +24,7 @@ model Role {
   name String
 
   accounts    Account[]
+  permissions RolePermission[]
 
   @@map("roles")
 }
@@ -33,6 +34,8 @@ model Permission {
   name   String
   code   String  @unique
 
+  roles RolePermission[]
+
   @@map("permissions")
 }
 
@@ -40,7 +43,9 @@ model RolePermission {
    roleId         String  @db.Uuid @map("role_id")
    permissionCode String @map("permission_code")
 
-   @@id([roleId, permissionCode])
+   role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+   permission Permission @relation(fields: [permissionCode], references: [code], onDelete: Cascade)
 
+   @@id([roleId, permissionCode])
    @@map("roles_permissions")
 }
