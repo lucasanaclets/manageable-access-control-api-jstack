@@ -1,9 +1,9 @@
 import { AuthorizationMiddleware } from "../application/middlewares/AuthorizationMiddleware";
 import { makeGetRolePermissionsUseCase } from "./makeGetRolePermissions";
 
-export function makeAuthorizationMiddleware(allowedRoles: string[]) {
+export function makeAuthorizationMiddleware(requiredPermissions: string[]) {
   return new AuthorizationMiddleware(
-    allowedRoles,
+    requiredPermissions,
     makeGetRolePermissionsUseCase()
   );
 }
